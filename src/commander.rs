@@ -57,6 +57,7 @@ pub struct Commands<'a, Fut>
 where
   Fut: Future<Output = ()>, {
   name: String,
+  desc: String,
   command_list: Vec<Command<'a, Fut>>
 }
 
@@ -66,6 +67,7 @@ where
   pub fn new(name: &str) -> Commands<'a, Fut> {
     return Commands {
       name: name.to_string(),
+      desc: "No Description".to_string(),
       command_list: vec![]
     };
   }
@@ -84,8 +86,15 @@ where
     return &mut self.command_list[i];
   }
 
+  pub fn description(&mut self, desc: &str) -> &mut Commands<'a, Fut> {
+    self.desc = desc.to_owned();
+
+    return self;
+  }
+
   fn help(&self) {
-    println!("Useage: {} [options] [command]", self.name);
+    println!("{}\n", self.desc);
+    println!("Usage: {} [options] [command]", self.name);
     println!();
     println!("Option:");
     println!("  -h, --help");

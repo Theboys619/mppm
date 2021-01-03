@@ -83,7 +83,9 @@ fn publish(args: Vec<String>) {
 
 #[tokio::main]
 async fn main() {
-  let mut parser = Commands::new("apm");
+  let mut parser = Commands::new("mppm");
+  parser
+    .description("Multipurpose package manager - A package manager for anything");
 
   parser
     .command("install <package>")

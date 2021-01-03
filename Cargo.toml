@@ -1,5 +1,5 @@
 [package]
-name = "apm"
+name = "mppm"
 version = "0.1.0"
 authors = ["theboys619 <theboys619@gmail.com>"]
 edition = "2018"
