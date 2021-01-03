@@ -32,24 +32,28 @@ fn writeFiles(data: Vec<Value>) -> Pin<Box<dyn Future<Output = ()>>> {
   Box::pin(async move {
     for item in data {
       let obj: &Map<String, Value> = item.as_object().unwrap();
-      let path = obj["path"].as_str().unwrap().to_owned() + "/" + obj["name"].as_str().unwrap();
+      let path = obj["path"].as_str().unwrap().to_owned() + "/" + obj["name"].as_str().unwrap(); // Get path of object
   
       if obj["type"].as_str().unwrap() == "Directory" {
         let mut dirb = DirBuilder::new();
-        dirb.recursive(true).create(path.clone());
+        dirb.recursive(true).create(path.clone()); // recursively create the path for folder that might not exist
+
         println!("Wrote Folder: {}", path.clone());
-        let filesList: Vec<Value> = obj["files"].as_array().unwrap().to_vec();
-        writeFiles(filesList).await;
+
+        let filesList: Vec<Value> = obj["files"].as_array().unwrap().to_vec(); // Get filelist from directory
+        writeFiles(filesList).await; // read those files/folders and write them
       } else if obj["type"].as_str().unwrap() == "File" {
-        let filec = File::create(path.clone());
-        if filec.is_ok() {
-          let mut file = filec.unwrap();
-          let mut url: String = REGISTRY.to_owned();
+        let filec = File::create(path.clone()); // create a file
+        if filec.is_ok() { // check if it is ok
+          let mut file = filec.unwrap(); // get the file
+
+          let mut url: String = REGISTRY.to_owned(); // create package URL to get data of the file
           url += "/";
           url += &path;
   
-          let filedata: String = get_body(&*url).await;
-          file.write_all(filedata.as_bytes());
+          let filedata: String = get_body(&*url).await; // make the request
+          file.write_all(filedata.as_bytes()); // write the file to the package folder
+
           println!("Wrote File: {}", path.clone());
         } else {
           println!("Could not write file: {}", path.clone());
@@ -65,11 +69,11 @@ async fn install(args: Vec<String>) -> () {
   url += "/";
   url += &pkgname;
 
-  let body: String = get_body(&*url).await;
-  let resdata: Value = serde_json::from_str(&*body).unwrap();
-  let data: Vec<Value> = resdata.as_array().unwrap().to_vec();
+  let body: String = get_body(&*url).await; // make request to registry to get file list
+  let resdata: Value = serde_json::from_str(&*body).unwrap(); // unwrap the response
+  let data: Vec<Value> = resdata.as_array().unwrap().to_vec(); // get the data as an array then as a vector
 
-  writeFiles(data).await;
+  writeFiles(data).await; // write all the files/folders from the file list
   println!("Wrote package {}", pkgname);
 }
 

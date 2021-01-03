@@ -163,6 +163,8 @@ where
         if nofunc && noasync && !missingargs {
           println!("Not implemented yet.");
         }
+      } else if *cmdname == "--help" || *cmdname == "-h" {
+        self.help();
       }
     }
   }
