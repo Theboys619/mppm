@@ -1,0 +1,13 @@
+[package]
+name = "apm"
+version = "0.1.0"
+authors = ["theboys619 <theboys619@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "0.2.21", features = ["macros"] }
+reqwest = { version = "0.10.10" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.61"
